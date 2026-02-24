@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Legal Affidavit Generator</title>
+
+<style>
+body{
+font-family: Arial, sans-serif;
+background:#f4f6f9;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:#ffffff;
+padding:25px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+select,input,textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:14px;
+}
+
+button{
+padding:12px 18px;
+background:#0d6efd;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:10px;
+}
+
+button:hover{
+background:#084298;
+}
+
+.preview{
+margin-top:30px;
+padding:25px;
+border:1px solid #000;
+min-height:400px;
+}
+
+@media print{
+body *{
+visibility:hidden;
+}
+.preview, .preview *{
+visibility:visible;
+}
+.preview{
+position:absolute;
+left:0;
+top:0;
+width:100%;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Global Legal Affidavit Generator</h2>
+
+<select id="language">
+<option value="en">English</option>
+<option value="hi">Hindi</option>
+<option value="ur">Urdu</option>
+<option value="ar">Arabic</option>
+</select>
+
+<select id="country">
+<option>India</option>
+<option>Pakistan</option>
+<option>UAE</option>
+<option>USA</option>
+<option>UK</option>
+<option>Canada</option>
+<option>Australia</option>
+<option>Germany</option>
+<option>Saudi Arabia</option>
+</select>
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="text" id="father" placeholder="Father / Guardian Name">
+<input type="text" id="address" placeholder="Full Address">
+<input type="text" id="purpose" placeholder="Affidavit Purpose">
+<textarea id="statement" rows="4" placeholder="Write your sworn statement here..."></textarea>
+
+<button onclick="generate()">Update Preview</button>
+<button onclick="window.print()">Print A4</button>
+
+<div class="preview" id="previewBox"></div>
+
+</div>
+
+<script>
+function generate(){
+
+let lang=document.getElementById("language").value;
+let country=document.getElementById("country").value;
+let name=document.getElementById("name").value;
+let father=document.getElementById("father").value;
+let address=document.getElementById("address").value;
+let purpose=document.getElementById("purpose").value;
+let statement=document.getElementById("statement").value;
+
+let text="";
+
+if(lang==="en"){
+text=`
+<h3 style="text-align:center;">AFFIDAVIT</h3>
+<p>I, <b>${name}</b>, son/daughter of <b>${father}</b>, residing at <b>${address}</b>, do hereby solemnly affirm and declare as under:</p>
+<p><b>Subject:</b> ${purpose}</p>
+<p>${statement}</p>
+<p>Verified under governing law of ${country}.</p>
+<br><br>
+<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
+<p>Deponent &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Notary / Authority</p>
+`;
+}
+
+if(lang==="hi"){
+text=`
+<h3 style="text-align:center;">शपथ पत्र</h3>
+<p>मैं, <b>${name}</b>, पिता/अभिभावक <b>${father}</b>, निवासी <b>${address}</b>, यह शपथपूर्वक घोषणा करता/करती हूँ:</p>
+<p><b>विषय:</b> ${purpose}</p>
+<p>${statement}</p>
+<p>यह घोषणा ${country} के कानून के अंतर्गत सत्यापित है।</p>
+<br><br>
+<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
+<p>घोषणाकर्ता &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; नोटरी / प्राधिकरण</p>
+`;
+}
+
+if(lang==="ur"){
+text=`
+<div dir="rtl">
+<h3 style="text-align:center;">حلف نامہ</h3>
+<p>میں، <b>${name}</b> ولد/بنت <b>${father}</b>، رہائشی <b>${address}</b>، حلفاً بیان کرتا/کرتی ہوں:</p>
+<p><b>موضوع:</b> ${purpose}</p>
+<p>${statement}</p>
+<p>یہ بیان ${country} کے قانون کے تحت تصدیق شدہ ہے۔</p>
+<br><br>
+<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
+<p>بیان کنندہ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; نوٹری / اتھارٹی</p>
+</div>
+`;
+}
+
+if(lang==="ar"){
+text=`
+<div dir="rtl">
+<h3 style="text-align:center;">إقرار قانوني</h3>
+<p>أنا، <b>${name}</b> ابن/ابنة <b>${father}</b>، المقيم في <b>${address}</b>، أقر وأصرح بما يلي:</p>
+<p><b>الموضوع:</b> ${purpose}</p>
+<p>${statement}</p>
+<p>تم التحقق وفقًا لقانون ${country}.</p>
+<br><br>
+<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
+<p>المقر &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; الكاتب العدل</p>
+</div>
+`;
+}
+
+document.getElementById("previewBox").innerHTML=text;
+}
+</script>
+
+</body>
+</html>
