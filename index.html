@@ -7,69 +7,113 @@
 
 <style>
 body{
-font-family: Arial, sans-serif;
-background:#f4f6f9;
-margin:0;
-padding:20px;
+  margin:0;
+  padding:20px;
+  background:#f2f2f2;
+  font-family: Arial, sans-serif;
 }
 
 .container{
-max-width:900px;
-margin:auto;
-background:#ffffff;
-padding:25px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  max-width:900px;
+  margin:auto;
+  background:#ffffff;
+  padding:20px;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
 h2{
-text-align:center;
-margin-bottom:20px;
+  text-align:center;
 }
 
 select,input,textarea{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:6px;
-border:1px solid #ccc;
-font-size:14px;
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:6px;
 }
 
 button{
-padding:12px 18px;
-background:#0d6efd;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin-top:10px;
+  padding:12px;
+  background:#0d6efd;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  margin-top:8px;
 }
 
 button:hover{
-background:#084298;
+  background:#084298;
 }
 
 .preview{
-margin-top:30px;
-padding:25px;
-border:1px solid #000;
-min-height:400px;
+  margin-top:30px;
+  background:#fff;
+  padding:25mm;
+  border:1px solid #000;
+  font-family:"Times New Roman", serif;
+  min-height:260mm;
 }
 
+.legal-header{
+  text-align:center;
+  font-size:24px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.sub-head{
+  font-size:14px;
+  margin-top:5px;
+}
+
+.legal-body{
+  margin-top:25px;
+  font-size:16px;
+  line-height:1.8;
+}
+
+.legal-clauses{
+  margin-top:15px;
+}
+
+.law-line{
+  margin-top:25px;
+  font-weight:bold;
+}
+
+.date-place{
+  margin-top:40px;
+}
+
+.signature-section{
+  display:flex;
+  justify-content:space-between;
+  margin-top:60px;
+}
+
+.sign-box{
+  width:45%;
+  text-align:center;
+}
+
+/* PRINT */
 @media print{
-body *{
-visibility:hidden;
-}
-.preview, .preview *{
-visibility:visible;
-}
-.preview{
-position:absolute;
-left:0;
-top:0;
-width:100%;
-}
+  body *{
+    visibility:hidden;
+  }
+  .preview, .preview *{
+    visibility:visible;
+  }
+  .preview{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    border:none;
+  }
 }
 </style>
 </head>
@@ -77,6 +121,7 @@ width:100%;
 <body>
 
 <div class="container">
+
 <h2>Global Legal Affidavit Generator</h2>
 
 <select id="language">
@@ -90,12 +135,12 @@ width:100%;
 <option>India</option>
 <option>Pakistan</option>
 <option>UAE</option>
+<option>Saudi Arabia</option>
 <option>USA</option>
 <option>UK</option>
 <option>Canada</option>
 <option>Australia</option>
 <option>Germany</option>
-<option>Saudi Arabia</option>
 </select>
 
 <input type="text" id="name" placeholder="Full Name">
@@ -126,41 +171,114 @@ let text="";
 
 if(lang==="en"){
 text=`
-<h3 style="text-align:center;">AFFIDAVIT</h3>
-<p>I, <b>${name}</b>, son/daughter of <b>${father}</b>, residing at <b>${address}</b>, do hereby solemnly affirm and declare as under:</p>
-<p><b>Subject:</b> ${purpose}</p>
-<p>${statement}</p>
-<p>Verified under governing law of ${country}.</p>
-<br><br>
-<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
-<p>Deponent &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Notary / Authority</p>
+<div dir="ltr">
+<div class="legal-header">AFFIDAVIT<div class="sub-head">BEFORE THE NOTARY PUBLIC</div></div>
+
+<div class="legal-body">
+<p>I, <b>${name}</b>, son/daughter of <b>${father}</b>, resident of <b>${address}</b>, do hereby solemnly affirm and state as follows:</p>
+
+<ol class="legal-clauses">
+<li>That I am the deponent herein.</li>
+<li>That this affidavit is made for the purpose of ${purpose}.</li>
+<li>${statement}</li>
+<li>That the contents of this affidavit are true and correct.</li>
+</ol>
+
+<p class="law-line">Verified under the governing law of ${country}.</p>
+
+<div class="date-place">
+Place: ____________________<br>
+Date: ____________________
+</div>
+
+<div class="signature-section">
+<div class="sign-box">
+_________________________<br>
+Signature of Deponent
+</div>
+
+<div class="sign-box">
+_________________________<br>
+Signature & Seal of Notary
+</div>
+</div>
+</div>
+</div>
 `;
 }
 
 if(lang==="hi"){
 text=`
-<h3 style="text-align:center;">शपथ पत्र</h3>
-<p>मैं, <b>${name}</b>, पिता/अभिभावक <b>${father}</b>, निवासी <b>${address}</b>, यह शपथपूर्वक घोषणा करता/करती हूँ:</p>
-<p><b>विषय:</b> ${purpose}</p>
-<p>${statement}</p>
-<p>यह घोषणा ${country} के कानून के अंतर्गत सत्यापित है।</p>
-<br><br>
-<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
-<p>घोषणाकर्ता &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; नोटरी / प्राधिकरण</p>
+<div dir="ltr">
+<div class="legal-header">शपथ पत्र<div class="sub-head">नोटरी पब्लिक के समक्ष</div></div>
+
+<div class="legal-body">
+<p>मैं, <b>${name}</b>, पिता/अभिभावक <b>${father}</b>, निवासी <b>${address}</b>, शपथपूर्वक यह घोषणा करता/करती हूँ:</p>
+
+<ol class="legal-clauses">
+<li>कि मैं इस शपथ पत्र का घोषणाकर्ता हूँ।</li>
+<li>कि यह शपथ पत्र ${purpose} के उद्देश्य से बनाया गया है।</li>
+<li>${statement}</li>
+<li>कि इस शपथ पत्र की सभी बातें सत्य और सही हैं।</li>
+</ol>
+
+<p class="law-line">यह घोषणा ${country} के कानून के अंतर्गत सत्यापित है।</p>
+
+<div class="date-place">
+स्थान: ____________________<br>
+दिनांक: ____________________
+</div>
+
+<div class="signature-section">
+<div class="sign-box">
+_________________________<br>
+घोषणाकर्ता के हस्ताक्षर
+</div>
+
+<div class="sign-box">
+_________________________<br>
+नोटरी / प्राधिकारी
+</div>
+</div>
+</div>
+</div>
 `;
 }
 
 if(lang==="ur"){
 text=`
 <div dir="rtl">
-<h3 style="text-align:center;">حلف نامہ</h3>
+<div class="legal-header">حلف نامہ<div class="sub-head">نوٹری پبلک کے روبرو</div></div>
+
+<div class="legal-body">
 <p>میں، <b>${name}</b> ولد/بنت <b>${father}</b>، رہائشی <b>${address}</b>، حلفاً بیان کرتا/کرتی ہوں:</p>
-<p><b>موضوع:</b> ${purpose}</p>
-<p>${statement}</p>
-<p>یہ بیان ${country} کے قانون کے تحت تصدیق شدہ ہے۔</p>
-<br><br>
-<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
-<p>بیان کنندہ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; نوٹری / اتھارٹی</p>
+
+<ol class="legal-clauses">
+<li>کہ میں اس حلف نامہ کا بیان کنندہ ہوں۔</li>
+<li>کہ یہ حلف نامہ ${purpose} کے مقصد کے لیے تیار کیا گیا ہے۔</li>
+<li>${statement}</li>
+<li>کہ اس حلف نامہ کے مندرجات درست اور سچ ہیں۔</li>
+</ol>
+
+<p class="law-line">یہ بیان ${country} کے قانون کے تحت تصدیق شدہ ہے۔</p>
+
+<div class="date-place">
+مقام: ____________________<br>
+تاریخ: ____________________
+</div>
+
+<div class="signature-section">
+<div class="sign-box">
+_________________________<br>
+دستخط بیان کنندہ
+</div>
+
+<div class="sign-box">
+_________________________<br>
+نوٹری / اتھارٹی
+</div>
+</div>
+</div>
 </div>
 `;
 }
@@ -168,14 +286,37 @@ text=`
 if(lang==="ar"){
 text=`
 <div dir="rtl">
-<h3 style="text-align:center;">إقرار قانوني</h3>
+<div class="legal-header">إقرار قانوني<div class="sub-head">أمام الكاتب بالعدل</div></div>
+
+<div class="legal-body">
 <p>أنا، <b>${name}</b> ابن/ابنة <b>${father}</b>، المقيم في <b>${address}</b>، أقر وأصرح بما يلي:</p>
-<p><b>الموضوع:</b> ${purpose}</p>
-<p>${statement}</p>
-<p>تم التحقق وفقًا لقانون ${country}.</p>
-<br><br>
-<p>_______________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _______________________</p>
-<p>المقر &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; الكاتب العدل</p>
+
+<ol class="legal-clauses">
+<li>أنني المقر المذكور أعلاه.</li>
+<li>أن هذا الإقرار مقدم لغرض ${purpose}.</li>
+<li>${statement}</li>
+<li>أن جميع المعلومات صحيحة حسب علمي.</li>
+</ol>
+
+<p class="law-line">تم التحقق وفقًا لقانون ${country}.</p>
+
+<div class="date-place">
+المكان: ____________________<br>
+التاريخ: ____________________
+</div>
+
+<div class="signature-section">
+<div class="sign-box">
+_________________________<br>
+توقيع المقر
+</div>
+
+<div class="sign-box">
+_________________________<br>
+توقيع الكاتب بالعدل
+</div>
+</div>
+</div>
 </div>
 `;
 }
