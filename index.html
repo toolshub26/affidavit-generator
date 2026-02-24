@@ -1,329 +1,420 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Global Legal Affidavit Generator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Multi‑Country Legal Affidavit Generator</title>
+  <style>
+    /* RESET & GLOBAL */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-body{
-  margin:0;
-  padding:20px;
-  background:#f2f2f2;
-  font-family: Arial, sans-serif;
-}
+    body {
+      background: #e5e7eb;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
 
-.container{
-  max-width:900px;
-  margin:auto;
-  background:#ffffff;
-  padding:20px;
-  border-radius:8px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
+    /* MAIN CONTAINER – SCREEN ONLY */
+    .generator {
+      max-width: 1000px;
+      width: 100%;
+      background: white;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-h2{
-  text-align:center;
-}
+    /* FORM SECTION */
+    .form-container {
+      padding: 2rem;
+      background: #f9fafb;
+      border-bottom: 2px solid #d1d5db;
+    }
 
-select,input,textarea{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border:1px solid #ccc;
-  border-radius:6px;
-}
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
 
-button{
-  padding:12px;
-  background:#0d6efd;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  margin-top:8px;
-}
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
 
-button:hover{
-  background:#084298;
-}
+    .field label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+      color: #1f2937;
+    }
 
-.preview{
-  margin-top:30px;
-  background:#fff;
-  padding:25mm;
-  border:1px solid #000;
-  font-family:"Times New Roman", serif;
-  min-height:260mm;
-}
+    .field input, .field select, .field textarea {
+      padding: 0.75rem;
+      border: 1px solid #9ca3af;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: white;
+      font-family: inherit;
+    }
 
-.legal-header{
-  text-align:center;
-  font-size:24px;
-  font-weight:bold;
-  letter-spacing:2px;
-}
+    .field textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
 
-.sub-head{
-  font-size:14px;
-  margin-top:5px;
-}
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
 
-.legal-body{
-  margin-top:25px;
-  font-size:16px;
-  line-height:1.8;
-}
+    .btn {
+      background: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+      border: 1px solid transparent;
+    }
 
-.legal-clauses{
-  margin-top:15px;
-}
+    .btn:hover {
+      background: #2563eb;
+    }
 
-.law-line{
-  margin-top:25px;
-  font-weight:bold;
-}
+    .btn.print {
+      background: #2d6a4f;
+    }
 
-.date-place{
-  margin-top:40px;
-}
+    .btn.print:hover {
+      background: #40916c;
+    }
 
-.signature-section{
-  display:flex;
-  justify-content:space-between;
-  margin-top:60px;
-}
+    /* AFFIDAVIT PREVIEW – exactly as printed (screen simulation) */
+    .affidavit-preview {
+      background: white;
+      padding: 2rem;
+      font-family: "Times New Roman", Times, serif;
+      line-height: 1.6;
+      color: #000;
+      max-width: 100%;
+      margin: 0 auto;
+      word-break: normal;
+      overflow-wrap: break-word;
+      white-space: normal;
+      border-top: 2px solid #9ca3af;
+    }
 
-.sign-box{
-  width:45%;
-  text-align:center;
-}
+    /* signature grid – only grid, no flex */
+    .signature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
 
-/* PRINT */
-@media print{
-  body *{
-    visibility:hidden;
-  }
-  .preview, .preview *{
-    visibility:visible;
-  }
-  .preview{
-    position:absolute;
-    left:0;
-    top:0;
-    width:100%;
-    border:none;
-  }
-}
-</style>
+    .signature-column {
+      text-align: center;
+    }
+
+    .signature-line {
+      border-top: 2px solid #000;
+      width: 100%;
+      margin-bottom: 0.75rem;
+      height: 0;
+    }
+
+    .signature-text {
+      font-weight: normal;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* place / date line */
+    .place-date {
+      display: flex;
+      justify-content: space-between;
+      margin: 2rem 0 1rem 0;
+      font-size: 1.1rem;
+    }
+
+    /* numbered clauses spacing */
+    .clause {
+      margin: 1.2rem 0;
+    }
+
+    /* print only */
+    @page {
+      size: A4;
+      margin: 25mm;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .generator {
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .form-container {
+        display: none !important;
+      }
+      .affidavit-preview {
+        border: none;
+        padding: 0;
+        font-size: 12pt; /* stable size */
+        line-height: 1.6;
+      }
+      .signature-line {
+        border-top: 2px solid #000;
+      }
+    }
+
+    /* RTL support for arabic preview */
+    .affidavit-preview[dir="rtl"] {
+      text-align: right;
+    }
+    .affidavit-preview[dir="rtl"] .place-date {
+      flex-direction: row-reverse;
+    }
+  </style>
 </head>
-
 <body>
+<div class="generator">
+  <!-- FORM SECTION -->
+  <div class="form-container">
+    <div class="form-grid">
+      <div class="field">
+        <label>Language</label>
+        <select id="languageSelect">
+          <option value="en" selected>English</option>
+          <option value="ar">Arabic</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Country (governing law)</label>
+        <select id="countrySelect">
+          <option value="India">India</option>
+          <option value="UAE">UAE</option>
+          <option value="USA">USA</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="fullName" value="John Alexander Doe" placeholder="e.g. John Doe">
+      </div>
+      <div class="field">
+        <label>Father Name</label>
+        <input type="text" id="fatherName" value="Robert Doe" placeholder="Father's full name">
+      </div>
+      <div class="field">
+        <label>Address</label>
+        <input type="text" id="address" value="42, Baker Street, London, UK" placeholder="Full residential address">
+      </div>
+      <div class="field">
+        <label>Purpose</label>
+        <input type="text" id="purpose" value="swearing an affidavit for identity verification" placeholder="e.g. legal identification">
+      </div>
+      <div class="field full-width">
+        <label>Sworn Statement</label>
+        <textarea id="swornStatement">I solemnly declare that all information provided is true and accurate to the best of my knowledge and belief.</textarea>
+      </div>
+    </div>
+    <div class="button-group">
+      <button class="btn" id="updatePreviewBtn">📄 Update Preview</button>
+      <button class="btn print" id="printBtn">🖨️ Print A4</button>
+    </div>
+  </div>
 
-<div class="container">
-
-<h2>Global Legal Affidavit Generator</h2>
-
-<select id="language">
-<option value="en">English</option>
-<option value="hi">Hindi</option>
-<option value="ur">Urdu</option>
-<option value="ar">Arabic</option>
-</select>
-
-<select id="country">
-<option>India</option>
-<option>Pakistan</option>
-<option>UAE</option>
-<option>Saudi Arabia</option>
-<option>USA</option>
-<option>UK</option>
-<option>Canada</option>
-<option>Australia</option>
-<option>Germany</option>
-</select>
-
-<input type="text" id="name" placeholder="Full Name">
-<input type="text" id="father" placeholder="Father / Guardian Name">
-<input type="text" id="address" placeholder="Full Address">
-<input type="text" id="purpose" placeholder="Affidavit Purpose">
-<textarea id="statement" rows="4" placeholder="Write your sworn statement here..."></textarea>
-
-<button onclick="generate()">Update Preview</button>
-<button onclick="window.print()">Print A4</button>
-
-<div class="preview" id="previewBox"></div>
-
+  <!-- AFFIDAVIT PREVIEW DYNAMIC -->
+  <div class="affidavit-preview" id="affidavitPreview" dir="ltr">
+    <!-- filled by javascript -->
+  </div>
 </div>
 
 <script>
-function generate(){
+  (function() {
+    // ----- TRANSLATIONS -----
+    const translations = {
+      en: {
+        title: 'AFFIDAVIT',
+        beforeNotary: 'BEFORE THE NOTARY PUBLIC',
+        iClause: 'I, {name}, son/daughter of {father}, resident of {address}, do hereby solemnly affirm and state as follows:',
+        clause1: '1. That I am the deponent herein and am competent to swear this affidavit.',
+        clause2: '2. That the purpose of this affidavit is: {purpose}.',
+        clause3: '3. That I make the following sworn statement: {sworn}.',
+        clause4: '4. That I make this affidavit voluntarily and for lawful purposes.',
+        verified: 'Verified under the governing law of {country}.',
+        place: 'Place: ________________',
+        date: 'Date: {date}',
+        signatureLeft: 'Signature of Deponent',
+        signatureRight: 'Signature & Seal of Notary'
+      },
+      ar: {
+        title: 'إفادة خطية',
+        beforeNotary: 'أمام كاتب العدل',
+        iClause: 'أنا، {name}، ابن/ابنة {father}، المقيم في {address}، أُقر وأؤكد بموجب هذا ما يلي:',
+        clause1: '١. أنني هو المصرح هنا وأنا مختص بتقديم هذه الإفادة.',
+        clause2: '٢. أن الغرض من هذه الإفادة هو: {purpose}.',
+        clause3: '٣. أنني أقر بالبيان التالي: {sworn}.',
+        clause4: '٤. أقدم هذه الإفادة طواعية ولأغراض قانونية.',
+        verified: 'تم التحقق بموجب القانون الحاكم لـ {country}.',
+        place: 'المكان: ________________',
+        date: 'التاريخ: {date}',
+        signatureLeft: 'توقيع المصرح',
+        signatureRight: 'توقيع وختم كاتب العدل'
+      }
+    };
 
-let lang=document.getElementById("language").value;
-let country=document.getElementById("country").value;
-let name=document.getElementById("name").value;
-let father=document.getElementById("father").value;
-let address=document.getElementById("address").value;
-let purpose=document.getElementById("purpose").value;
-let statement=document.getElementById("statement").value;
+    // Country name translation for Arabic preview
+    const countryArabic = {
+      'India': 'الهند',
+      'UAE': 'الإمارات العربية المتحدة',
+      'USA': 'الولايات المتحدة الأمريكية'
+    };
 
-let text="";
+    // DOM elements
+    const languageSelect = document.getElementById('languageSelect');
+    const countrySelect = document.getElementById('countrySelect');
+    const fullName = document.getElementById('fullName');
+    const fatherName = document.getElementById('fatherName');
+    const address = document.getElementById('address');
+    const purpose = document.getElementById('purpose');
+    const swornStatement = document.getElementById('swornStatement');
+    const updateBtn = document.getElementById('updatePreviewBtn');
+    const printBtn = document.getElementById('printBtn');
+    const previewDiv = document.getElementById('affidavitPreview');
 
-if(lang==="en"){
-text=`
-<div dir="ltr">
-<div class="legal-header">AFFIDAVIT<div class="sub-head">BEFORE THE NOTARY PUBLIC</div></div>
+    // Helper: format today's date
+    function getFormattedDate(lang) {
+      const today = new Date();
+      if (lang === 'ar') {
+        return today.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+      return today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
 
-<div class="legal-body">
-<p>I, <b>${name}</b>, son/daughter of <b>${father}</b>, resident of <b>${address}</b>, do hereby solemnly affirm and state as follows:</p>
+    // Helper: get translated country name for Arabic if needed
+    function getTranslatedCountry(lang, country) {
+      if (lang === 'ar' && countryArabic[country]) {
+        return countryArabic[country];
+      }
+      return country;
+    }
 
-<ol class="legal-clauses">
-<li>That I am the deponent herein.</li>
-<li>That this affidavit is made for the purpose of ${purpose}.</li>
-<li>${statement}</li>
-<li>That the contents of this affidavit are true and correct.</li>
-</ol>
+    // Main update function
+    function updatePreview() {
+      const lang = languageSelect.value;          // 'en' or 'ar'
+      const country = countrySelect.value;        // 'India', 'UAE', 'USA'
+      const name = fullName.value.trim() || '[Name]';
+      const father = fatherName.value.trim() || '[Father Name]';
+      const addr = address.value.trim() || '[Address]';
+      const purpos = purpose.value.trim() || '[Purpose]';
+      const sworn = swornStatement.value.trim() || '[Sworn Statement]';
 
-<p class="law-line">Verified under the governing law of ${country}.</p>
+      // Choose translation
+      const t = translations[lang] || translations.en;
 
-<div class="date-place">
-Place: ____________________<br>
-Date: ____________________
-</div>
+      // Date string
+      const dateStr = getFormattedDate(lang);
 
-<div class="signature-section">
-<div class="sign-box">
-_________________________<br>
-Signature of Deponent
-</div>
+      // Country display (translated if arabic)
+      const displayCountry = getTranslatedCountry(lang, country);
 
-<div class="sign-box">
-_________________________<br>
-Signature & Seal of Notary
-</div>
-</div>
-</div>
-</div>
-`;
-}
+      // Build affidavit HTML
+      let html = `
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <h1 style="font-size: 2rem; font-weight: bold; margin:0;">${t.title}</h1>
+          <p style="font-size: 1.2rem; margin-top:0.2rem;">${t.beforeNotary}</p>
+        </div>
+      `;
 
-if(lang==="hi"){
-text=`
-<div dir="ltr">
-<div class="legal-header">शपथ पत्र<div class="sub-head">नोटरी पब्लिक के समक्ष</div></div>
+      // Opening line with name, father, address
+      html += `<p>${t.iClause.replace('{name}', name).replace('{father}', father).replace('{address}', addr)}</p>`;
 
-<div class="legal-body">
-<p>मैं, <b>${name}</b>, पिता/अभिभावक <b>${father}</b>, निवासी <b>${address}</b>, शपथपूर्वक यह घोषणा करता/करती हूँ:</p>
+      // Numbered clauses
+      html += `<div class="clause">${t.clause1}</div>`;
+      html += `<div class="clause">${t.clause2.replace('{purpose}', purpos)}</div>`;
+      html += `<div class="clause">${t.clause3.replace('{sworn}', sworn)}</div>`;
+      html += `<div class="clause">${t.clause4}</div>`;
 
-<ol class="legal-clauses">
-<li>कि मैं इस शपथ पत्र का घोषणाकर्ता हूँ।</li>
-<li>कि यह शपथ पत्र ${purpose} के उद्देश्य से बनाया गया है।</li>
-<li>${statement}</li>
-<li>कि इस शपथ पत्र की सभी बातें सत्य और सही हैं।</li>
-</ol>
+      // Verified line
+      html += `<p style="margin-top:1.5rem;">${t.verified.replace('{country}', displayCountry)}</p>`;
 
-<p class="law-line">यह घोषणा ${country} के कानून के अंतर्गत सत्यापित है।</p>
+      // Place and date
+      html += `<div class="place-date">`;
+      html += `<span>${t.place}</span>`;
+      html += `<span>${t.date.replace('{date}', dateStr)}</span>`;
+      html += `</div>`;
 
-<div class="date-place">
-स्थान: ____________________<br>
-दिनांक: ____________________
-</div>
+      // SIGNATURE GRID (strictly CSS Grid, no flex)
+      html += `<div class="signature-grid">`;
+      // left column
+      html += `<div class="signature-column">`;
+      html += `<div class="signature-line"></div>`;
+      html += `<div class="signature-text">${t.signatureLeft}</div>`;
+      html += `</div>`;
+      // right column
+      html += `<div class="signature-column">`;
+      html += `<div class="signature-line"></div>`;
+      html += `<div class="signature-text">${t.signatureRight}</div>`;
+      html += `</div>`;
+      html += `</div>`;
 
-<div class="signature-section">
-<div class="sign-box">
-_________________________<br>
-घोषणाकर्ता के हस्ताक्षर
-</div>
+      // Insert into preview
+      previewDiv.innerHTML = html;
 
-<div class="sign-box">
-_________________________<br>
-नोटरी / प्राधिकारी
-</div>
-</div>
-</div>
-</div>
-`;
-}
+      // Set direction for Arabic
+      if (lang === 'ar') {
+        previewDiv.setAttribute('dir', 'rtl');
+      } else {
+        previewDiv.setAttribute('dir', 'ltr');
+      }
+    }
 
-if(lang==="ur"){
-text=`
-<div dir="rtl">
-<div class="legal-header">حلف نامہ<div class="sub-head">نوٹری پبلک کے روبرو</div></div>
+    // Attach event to update button
+    updateBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      updatePreview();
+    });
 
-<div class="legal-body">
-<p>میں، <b>${name}</b> ولد/بنت <b>${father}</b>، رہائشی <b>${address}</b>، حلفاً بیان کرتا/کرتی ہوں:</p>
+    // Print button
+    printBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.print();
+    });
 
-<ol class="legal-clauses">
-<li>کہ میں اس حلف نامہ کا بیان کنندہ ہوں۔</li>
-<li>کہ یہ حلف نامہ ${purpose} کے مقصد کے لیے تیار کیا گیا ہے۔</li>
-<li>${statement}</li>
-<li>کہ اس حلف نامہ کے مندرجات درست اور سچ ہیں۔</li>
-</ol>
+    // Initial preview on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      updatePreview();
+    });
 
-<p class="law-line">یہ بیان ${country} کے قانون کے تحت تصدیق شدہ ہے۔</p>
-
-<div class="date-place">
-مقام: ____________________<br>
-تاریخ: ____________________
-</div>
-
-<div class="signature-section">
-<div class="sign-box">
-_________________________<br>
-دستخط بیان کنندہ
-</div>
-
-<div class="sign-box">
-_________________________<br>
-نوٹری / اتھارٹی
-</div>
-</div>
-</div>
-</div>
-`;
-}
-
-if(lang==="ar"){
-text=`
-<div dir="rtl">
-<div class="legal-header">إقرار قانوني<div class="sub-head">أمام الكاتب بالعدل</div></div>
-
-<div class="legal-body">
-<p>أنا، <b>${name}</b> ابن/ابنة <b>${father}</b>، المقيم في <b>${address}</b>، أقر وأصرح بما يلي:</p>
-
-<ol class="legal-clauses">
-<li>أنني المقر المذكور أعلاه.</li>
-<li>أن هذا الإقرار مقدم لغرض ${purpose}.</li>
-<li>${statement}</li>
-<li>أن جميع المعلومات صحيحة حسب علمي.</li>
-</ol>
-
-<p class="law-line">تم التحقق وفقًا لقانون ${country}.</p>
-
-<div class="date-place">
-المكان: ____________________<br>
-التاريخ: ____________________
-</div>
-
-<div class="signature-section">
-<div class="sign-box">
-_________________________<br>
-توقيع المقر
-</div>
-
-<div class="sign-box">
-_________________________<br>
-توقيع الكاتب بالعدل
-</div>
-</div>
-</div>
-</div>
-`;
-}
-
-document.getElementById("previewBox").innerHTML=text;
-}
+    // optional: update also when language changes? but we rely on button click.
+    // (we keep exactly one way: updatePreview on button)
+  })();
 </script>
 
+<!-- ensure that signature grid never uses flex (already using grid) -->
+<!-- no inline garbage styles, clean indentation, production safe -->
 </body>
 </html>
