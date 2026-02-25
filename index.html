@@ -1,271 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Legal Affidavit Generator</title>
 
-    /* place / date line */
-    .place-date {
-      display: flex;
-      justify-content: space-between;
-      margin: 2rem 0 1rem 0;
-      font-size: 1.1rem;
-    }
-
-    /* numbered clauses spacing */
-    .clause {
-      margin: 1.2rem 0;
-    }
-
-    /* print only */
-    @page {
-      size: A4;
-      margin: 25mm;
-    }
-
-    @media print {
-      body {
-        background: white;
-        padding: 0;
-      }
-      .generator {
-        box-shadow: none;
-        border-radius: 0;
-      }
-      .form-container {
-        display: none !important;
-      }
-      .affidavit-preview {
-        border: none;
-        padding: 0;
-        font-size: 12pt; /* stable size */
-        line-height: 1.6;
-      }
-      .signature-line {
-        border-top: 2px solid #000;
-      }
-    }
-
-    /* RTL support for arabic preview */
-    .affidavit-preview[dir="rtl"] {
-      text-align: right;
-    }
-    .affidavit-preview[dir="rtl"] .place-date {
-      flex-direction: row-reverse;
-    }
-  </style>
+<link rel="stylesheet" href="styles.css">
 </head>
-<body>
-<div class="generator">
-  <!-- FORM SECTION -->
-  <div class="form-container">
-    <div class="form-grid">
-      <div class="field">
-        <label>Language</label>
-        <select id="languageSelect">
-          <option value="en" selected>English</option>
-          <option value="ar">Arabic</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Country (governing law)</label>
-        <select id="countrySelect">
-          <option value="India">India</option>
-          <option value="UAE">UAE</option>
-          <option value="USA">USA</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Full Name</label>
-        <input type="text" id="fullName" value="John Alexander Doe" placeholder="e.g. John Doe">
-      </div>
-      <div class="field">
-        <label>Father Name</label>
-        <input type="text" id="fatherName" value="Robert Doe" placeholder="Father's full name">
-      </div>
-      <div class="field">
-        <label>Address</label>
-        <input type="text" id="address" value="42, Baker Street, London, UK" placeholder="Full residential address">
-      </div>
-      <div class="field">
-        <label>Purpose</label>
-        <input type="text" id="purpose" value="swearing an affidavit for identity verification" placeholder="e.g. legal identification">
-      </div>
-      <div class="field full-width">
-        <label>Sworn Statement</label>
-        <textarea id="swornStatement">I solemnly declare that all information provided is true and accurate to the best of my knowledge and belief.</textarea>
-      </div>
-    </div>
-    <div class="button-group">
-      <button class="btn" id="updatePreviewBtn">📄 Update Preview</button>
-      <button class="btn print" id="printBtn">🖨️ Print A4</button>
-    </div>
-  </div>
 
-  <!-- AFFIDAVIT PREVIEW DYNAMIC -->
-  <div class="affidavit-preview" id="affidavitPreview" dir="ltr">
-    <!-- filled by javascript -->
-  </div>
+<body>
+
+<div class="app-container">
+
+<div class="form-section">
+<h2>International Legal Affidavit Generator</h2>
+
+<label>Language</label>
+<select id="lang">
+<option value="en">English</option>
+<option value="ar">Arabic</option>
+</select>
+
+<label>Country (Governing Law)</label>
+<select id="country">
+<option value="India">India</option>
+<option value="UAE">UAE</option>
+<option value="USA">USA</option>
+</select>
+
+<label>Full Name</label>
+<input type="text" id="name">
+
+<label>Father Name</label>
+<input type="text" id="father">
+
+<label>Address</label>
+<input type="text" id="address">
+
+<label>Purpose</label>
+<textarea id="purpose"></textarea>
+
+<div class="btn-row">
+<button onclick="generateAffidavit()">Update Preview</button>
+<button onclick="window.print()">Print A4</button>
 </div>
 
-<script>
-  (function() {
-    // ----- TRANSLATIONS -----
-    const translations = {
-      en: {
-        title: 'AFFIDAVIT',
-        beforeNotary: 'BEFORE THE NOTARY PUBLIC',
-        iClause: 'I, {name}, son/daughter of {father}, resident of {address}, do hereby solemnly affirm and state as follows:',
-        clause1: '1. That I am the deponent herein and am competent to swear this affidavit.',
-        clause2: '2. That the purpose of this affidavit is: {purpose}.',
-        clause3: '3. That I make the following sworn statement: {sworn}.',
-        clause4: '4. That I make this affidavit voluntarily and for lawful purposes.',
-        verified: 'Verified under the governing law of {country}.',
-        place: 'Place: ________________',
-        date: 'Date: {date}',
-        signatureLeft: 'Signature of Deponent',
-        signatureRight: 'Signature & Seal of Notary'
-      },
-      ar: {
-        title: 'إفادة خطية',
-        beforeNotary: 'أمام كاتب العدل',
-        iClause: 'أنا، {name}، ابن/ابنة {father}، المقيم في {address}، أُقر وأؤكد بموجب هذا ما يلي:',
-        clause1: '١. أنني هو المصرح هنا وأنا مختص بتقديم هذه الإفادة.',
-        clause2: '٢. أن الغرض من هذه الإفادة هو: {purpose}.',
-        clause3: '٣. أنني أقر بالبيان التالي: {sworn}.',
-        clause4: '٤. أقدم هذه الإفادة طواعية ولأغراض قانونية.',
-        verified: 'تم التحقق بموجب القانون الحاكم لـ {country}.',
-        place: 'المكان: ________________',
-        date: 'التاريخ: {date}',
-        signatureLeft: 'توقيع المصرح',
-        signatureRight: 'توقيع وختم كاتب العدل'
-      }
-    };
+</div>
 
-    // Country name translation for Arabic preview
-    const countryArabic = {
-      'India': 'الهند',
-      'UAE': 'الإمارات العربية المتحدة',
-      'USA': 'الولايات المتحدة الأمريكية'
-    };
+<div id="preview" class="preview-section"></div>
 
-    // DOM elements
-    const languageSelect = document.getElementById('languageSelect');
-    const countrySelect = document.getElementById('countrySelect');
-    const fullName = document.getElementById('fullName');
-    const fatherName = document.getElementById('fatherName');
-    const address = document.getElementById('address');
-    const purpose = document.getElementById('purpose');
-    const swornStatement = document.getElementById('swornStatement');
-    const updateBtn = document.getElementById('updatePreviewBtn');
-    const printBtn = document.getElementById('printBtn');
-    const previewDiv = document.getElementById('affidavitPreview');
+</div>
 
-    // Helper: format today's date
-    function getFormattedDate(lang) {
-      const today = new Date();
-      if (lang === 'ar') {
-        return today.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-      }
-      return today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
-    // Helper: get translated country name for Arabic if needed
-    function getTranslatedCountry(lang, country) {
-      if (lang === 'ar' && countryArabic[country]) {
-        return countryArabic[country];
-      }
-      return country;
-    }
-
-    // Main update function
-    function updatePreview() {
-      const lang = languageSelect.value;          // 'en' or 'ar'
-      const country = countrySelect.value;        // 'India', 'UAE', 'USA'
-      const name = fullName.value.trim() || '[Name]';
-      const father = fatherName.value.trim() || '[Father Name]';
-      const addr = address.value.trim() || '[Address]';
-      const purpos = purpose.value.trim() || '[Purpose]';
-      const sworn = swornStatement.value.trim() || '[Sworn Statement]';
-
-      // Choose translation
-      const t = translations[lang] || translations.en;
-
-      // Date string
-      const dateStr = getFormattedDate(lang);
-
-      // Country display (translated if arabic)
-      const displayCountry = getTranslatedCountry(lang, country);
-
-      // Build affidavit HTML
-      let html = `
-        <div style="text-align: center; margin-bottom: 2rem;">
-          <h1 style="font-size: 2rem; font-weight: bold; margin:0;">${t.title}</h1>
-          <p style="font-size: 1.2rem; margin-top:0.2rem;">${t.beforeNotary}</p>
-        </div>
-      `;
-
-      // Opening line with name, father, address
-      html += `<p>${t.iClause.replace('{name}', name).replace('{father}', father).replace('{address}', addr)}</p>`;
-
-      // Numbered clauses
-      html += `<div class="clause">${t.clause1}</div>`;
-      html += `<div class="clause">${t.clause2.replace('{purpose}', purpos)}</div>`;
-      html += `<div class="clause">${t.clause3.replace('{sworn}', sworn)}</div>`;
-      html += `<div class="clause">${t.clause4}</div>`;
-
-      // Verified line
-      html += `<p style="margin-top:1.5rem;">${t.verified.replace('{country}', displayCountry)}</p>`;
-
-      // Place and date
-      html += `<div class="place-date">`;
-      html += `<span>${t.place}</span>`;
-      html += `<span>${t.date.replace('{date}', dateStr)}</span>`;
-      html += `</div>`;
-
-      // SIGNATURE GRID (strictly CSS Grid, no flex)
-      html += `<div class="signature-grid">`;
-      // left column
-      html += `<div class="signature-column">`;
-      html += `<div class="signature-line"></div>`;
-      html += `<div class="signature-text">${t.signatureLeft}</div>`;
-      html += `</div>`;
-      // right column
-      html += `<div class="signature-column">`;
-      html += `<div class="signature-line"></div>`;
-      html += `<div class="signature-text">${t.signatureRight}</div>`;
-      html += `</div>`;
-      html += `</div>`;
-
-      // Insert into preview
-      previewDiv.innerHTML = html;
-
-      // Set direction for Arabic
-      if (lang === 'ar') {
-        previewDiv.setAttribute('dir', 'rtl');
-      } else {
-        previewDiv.setAttribute('dir', 'ltr');
-      }
-    }
-
-    // Attach event to update button
-    updateBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      updatePreview();
-    });
-
-    // Print button
-    printBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.print();
-    });
-
-    // Initial preview on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      updatePreview();
-    });
-
-    // optional: update also when language changes? but we rely on button click.
-    // (we keep exactly one way: updatePreview on button)
-  })();
-</script>
-
-<!-- ensure that signature grid never uses flex (already using grid) -->
-<!-- no inline garbage styles, clean indentation, production safe -->
+<script src="script.js"></script>
 </body>
 </html>
