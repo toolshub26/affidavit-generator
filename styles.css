@@ -91,6 +91,7 @@ button{
   min-height:297mm;
   padding:40mm 25mm 25mm 25mm;
   box-shadow:0 0 15px rgba(0,0,0,0.1);
+  position:relative;
 }
 
 .document-preview{
@@ -139,6 +140,18 @@ button{
   border:2px solid #000;
   border-radius:50%;
   margin:15px auto 0;
+}
+
+/* ================================
+   PREMIUM WATERMARK
+=================================*/
+.watermark{
+  margin-top:60px;
+  text-align:center;
+  font-size:11px;
+  opacity:0.6;
+  letter-spacing:0.5px;
+  font-style:italic;
 }
 
 /* ================================
