@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Global Legal Affidavit Generator</title>
+<title>Global Premium Legal Affidavit Generator</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-<div class="app-container">
+<div class="container">
 
 <div class="form-section">
 <h2>Global Legal Affidavit Generator</h2>
@@ -17,40 +17,19 @@
 <label>Language</label>
 <select id="lang">
 <option value="en">English</option>
-<option value="ar">Arabic</option>
 <option value="ur">Urdu</option>
+<option value="ar">Arabic</option>
+<option value="hi">Hindi</option>
+<option value="zh">Chinese (Traditional)</option>
 </select>
 
 <label>Country (Governing Law)</label>
-<input list="countries" id="country" placeholder="Type country name...">
-
-<datalist id="countries">
-<option value="India">
-<option value="Pakistan">
-<option value="UAE">
-<option value="Saudi Arabia">
-<option value="USA">
-<option value="UK">
-<option value="Canada">
-<option value="Australia">
-<option value="Germany">
-<option value="France">
-<option value="China">
-<option value="Japan">
-<option value="South Africa">
-<option value="Malaysia">
-<option value="Turkey">
-<option value="Qatar">
-<option value="Kuwait">
-<option value="Oman">
-<option value="Indonesia">
-<option value="Bangladesh">
-</datalist>
+<input type="text" id="country" placeholder="e.g. India, USA, UAE">
 
 <label>Full Name</label>
 <input type="text" id="name">
 
-<label>Father Name</label>
+<label>Father / Parent Name</label>
 <input type="text" id="father">
 
 <label>Address</label>
@@ -59,18 +38,19 @@
 <label>Purpose</label>
 <textarea id="purpose"></textarea>
 
-<div class="btn-row">
-<button onclick="generateAffidavit()">Update Preview</button>
-<button onclick="window.print()">Print A4</button>
-</div>
+<button class="update-btn" onclick="generateAffidavit()">Update Preview</button>
+<button class="print-btn" onclick="window.print()">Print A4</button>
 
 </div>
 
-<div id="preview" class="preview-section"></div>
+<div class="preview-section">
+<div id="preview" class="document-preview">
+<!-- Document will generate here -->
+</div>
+</div>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
