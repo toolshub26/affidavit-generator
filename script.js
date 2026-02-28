@@ -14,8 +14,7 @@ if(!name || !father || !address || !purpose){
 
 const today = new Date().toLocaleDateString();
 const preview = document.getElementById("preview");
-
-let legalLine = country ? `Verified under the governing law of ${country}.` : "";
+let legalLine = country ? `This affidavit is executed under the governing laws of ${country}.` : "";
 
 if(lang === "ur"){
 preview.setAttribute("dir","rtl");
@@ -27,7 +26,7 @@ preview.innerHTML = `
 <p>2. مقصد: <b>${purpose}</b>۔</p>
 <p>3. تمام معلومات درست ہیں۔</p>
 <p>4. یہ بیان قانونی مقاصد کیلئے ہے۔</p>
-<p>${country}</p>
+<p>${legalLine}</p>
 <p>تاریخ: ${today}</p>
 <div class="signature-section">
 <div class="signature-box"><div class="signature-line">دستخط بیان کنندہ</div></div>
@@ -45,7 +44,7 @@ preview.innerHTML = `
 <p>2. الغرض: <b>${purpose}</b>.</p>
 <p>3. المعلومات صحيحة.</p>
 <p>4. تم تحريره لأغراض قانونية.</p>
-<p>${country}</p>
+<p>${legalLine}</p>
 <p>التاريخ: ${today}</p>
 <div class="signature-section">
 <div class="signature-box"><div class="signature-line">توقيع المصرح</div></div>
