@@ -66,13 +66,13 @@ button{
   color:#fff;
   margin-left:10px;
 }
-
 .preview-section{
-  background:#fff;
-  width:210mm;
-  min-height:297mm;
-  padding:35mm 25mm;
-  box-shadow:0 0 15px rgba(0,0,0,0.1);
+    background:#fff;
+    width:210mm;
+    height:auto;
+    padding:25mm 20mm;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+    page-break-after:avoid;
 }
 
 .doc-header{
@@ -131,16 +131,21 @@ button{
 
 @media print{
 
-  body{
-    background:#fff;
-  }
+    body{
+        background:#fff;
+    }
 
-  .form-section{
-    display:none !important;
-  }
+    .form-section{
+        display:none !important;
+    }
 
-  .preview-section{
-    width:180mm;
+    .preview-section{
+        width:100%;
+        height:auto;
+        box-shadow:none;
+        margin:0;
+    }
+}
     padding:0;
     box-shadow:none;
   }
